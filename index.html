@@ -446,27 +446,40 @@
       padding: 48px 40px;
       position: relative;
       overflow: hidden;
-      transition: background 0.4s ease;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1;
     }
 
     .service-card::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      transform: scaleX(0);
-      transition: transform 0.5s ease;
+      inset: 0;
+      background: radial-gradient(circle at 50% -20%, rgba(201, 168, 76, 0.15), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      z-index: -1;
+    }
+
+    .service-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid transparent;
+      transition: border-color 0.5s;
+      z-index: -1;
+      pointer-events: none;
     }
 
     .service-card:hover {
-      background: var(--surface);
+      background: rgba(20, 20, 22, 0.95);
     }
 
     .service-card:hover::before {
-      transform: scaleX(1);
+      opacity: 1;
+    }
+
+    .service-card:hover::after {
+      border-color: rgba(201, 168, 76, 0.1);
     }
 
     .service-num {
@@ -475,23 +488,32 @@
       color: var(--text-muted);
       letter-spacing: 2px;
       margin-bottom: 32px;
+      transition: color 0.4s;
+    }
+
+    .service-card:hover .service-num {
+      color: var(--gold);
     }
 
     .service-icon {
-      width: 48px;
-      height: 48px;
+      width: 54px;
+      height: 54px;
       border: 1px solid var(--border-bright);
       display: grid;
       place-items: center;
       margin-bottom: 28px;
-      font-size: 18px;
+      font-size: 20px;
       color: var(--gold);
-      transition: all 0.3s;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
     }
 
     .service-card:hover .service-icon {
-      border-color: var(--gold);
-      background: var(--gold-dim);
+      border-color: rgba(201, 168, 76, 0.4);
+      background: rgba(201, 168, 76, 0.05);
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(201, 168, 76, 0.1);
+      color: #fff;
     }
 
     .service-name {
