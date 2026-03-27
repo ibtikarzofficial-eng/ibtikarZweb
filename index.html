@@ -765,6 +765,24 @@
       content: '→';
     }
 
+    /* ─── REAL ESTATE IFRAME ─── */
+    .re-iframe-wrapper {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      height: 0;
+      overflow: hidden;
+    }
+
+    .re-iframe-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
     /* ─── STATS ─── */
     .stats-section {
       background: var(--gold);
@@ -1603,7 +1621,7 @@
 
     <div class="product-feature reveal">
       <div class="product-content">
-        <div class="product-label">Product 02 <span style="margin-left: 10px; color: var(--gold); border: 1px solid rgba(201,168,76,0.3); padding: 4px 8px; border-radius: 4px; font-size: 9px; background: rgba(201,168,76,0.05); letter-spacing: 1px;">COMING SOON</span></div>
+        <div class="product-label">Product 02</div>
         <h3 class="product-name">3D <em>Property</em><br>Viewer</h3>
         <p class="product-desc">A spatial property experience platform engineered for real estate developers and
           agencies. Clients tour properties from anywhere in the world — visualizing spaces before a single brick is
@@ -1616,16 +1634,23 @@
           <li>Shareable links for remote client presentations</li>
           <li>Integrates with existing property listing platforms</li>
         </ul>
-        <span class="product-link" style="color: var(--text-muted); cursor: not-allowed; opacity: 0.6;">Available Q3 2026</span>
+        <a href="https://realestate.ibtikarz.com" target="_blank" class="product-link">Live Preview</a>
       </div>
-      <div class="product-visual alt" style="opacity: 0.4; filter: grayscale(100%); pointer-events: none;">
+      <div class="product-visual alt">
         <div class="product-orbit"></div>
         <div class="product-orbit-2"></div>
-        <div class="product-visual-inner">
-          <div class="product-3d-icon">
-            <img src="House.webp" alt="3D Property Walk-through">
+        <div class="product-visual-inner" style="width: 100%; padding: 40px; box-sizing: border-box;">
+          <div style="width: 100%; position: relative; overflow: hidden; border: 1px solid rgba(201, 168, 76, 0.2); background: var(--panel); margin-bottom: 24px;">
+            <div class="re-iframe-wrapper">
+              <iframe src="https://realestate.ibtikarz.com/"
+                title="Aghaaz 5-Marla 3D Explorer"
+                style="width: 100%; height: 100%; border: none; display: block;"
+                allow="xr-spatial-tracking; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            </div>
           </div>
-          <div class="product-badge">In Development</div>
+          <a href="https://realestate.ibtikarz.com" target="_blank" class="product-badge" style="text-decoration: none;">Live Preview</a>
         </div>
       </div>
     </div>
