@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Product Viewer | IbtikarZ</title>
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        apple: {
+                            text: '#1D1D1F',
+                            gray: '#86868B',
+                            blue: '#007AFF',
+                            blueHover: '#005BB5',
+                            bg: '#F5F5F7',
+                            border: '#E5E5EA'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #1D1D1F;
+            background-color: #FFFFFF;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F5F5F7;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #D1D1D6;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #86868B;
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body class="antialiased selection:bg-apple-blue selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-tight text-apple-text flex items-center gap-2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    class="text-apple-blue">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linejoin="round"
+                        stroke-linecap="round" />
+                </svg>
+                IbtikarZ<span class="text-apple-blue">.</span>
+            </a>
+
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-apple-gray">
+                <a href="index.html" class="hover:text-apple-text transition-colors flex items-center gap-1">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 18l-6-6 6-6" />
+                    </svg> Back to Home
+                </a>
+                <a href="#roi" class="hover:text-apple-text transition-colors">Business ROI</a>
+                <a href="#features" class="hover:text-apple-text transition-colors">Capabilities</a>
+                <a href="#contact"
+                    class="px-5 py-2.5 bg-apple-blue text-white rounded-full hover:bg-apple-blueHover transition-all shadow-sm hover:shadow-md font-semibold">
+                    Request Integration
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 bg-apple-bg overflow-hidden relative">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="z-10">
+                <span class="text-sm font-semibold text-apple-blue uppercase tracking-wider mb-4 block">Interactive
+                    Commerce</span>
+                <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-apple-text leading-[1.1] mb-6">
+                    Let them touch it.<br>Before they buy it.
+                </h1>
+                <p class="text-xl text-apple-gray font-light max-w-lg mb-10 leading-relaxed">
+                    Stop selling premium products with flat, lifeless images. Embed a high-performance 3D viewer
+                    directly into your store to eliminate buyer doubt and dominate your market.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#roi"
+                        class="px-8 py-4 bg-apple-text text-white rounded-full text-center hover:bg-black transition-all shadow-lg font-medium text-lg">
+                        See the Business Case
+                    </a>
+                    <a href="http://3dviewer.ibtikarz.com/" target="_blank" rel="noopener noreferrer"
+                        class="px-8 py-4 bg-transparent text-apple-text border border-apple-border rounded-full text-center hover:border-apple-text transition-all font-medium text-lg flex items-center justify-center gap-2">
+                        Open Fullscreen App
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- The Live Interactive Viewer -->
+            <div class="z-10 relative">
+                <div class="bg-white rounded-[2.5rem] p-4 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.08)] relative group">
+                    <div
+                        class="absolute -top-4 -right-4 bg-apple-blue text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg flex items-center gap-2 z-20 animate-bounce">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                        </svg>
+                        Interact Now
+                    </div>
+                    <div
+                        class="aspect-square bg-[#F9F9FB] rounded-3xl relative overflow-hidden shadow-inner border border-black/5 flex items-center justify-center">
+                        <iframe src="https://3dviewer.ibtikarZ.com"
+                            style="width: 100%; height: 100%; border: none; outline: none; background: transparent;"
+                            scrolling="no" allow="autoplay; fullscreen; xr-spatial-tracking"
+                            class="w-full h-full object-cover z-10">
+                        </iframe>
+                        <div class="absolute inset-0 flex items-center justify-center z-0">
+                            <div
+                                class="w-8 h-8 border-4 border-apple-blue/30 border-t-apple-blue rounded-full animate-spin">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Problem & Solution (Why Businesses Need This) -->
+    <section id="roi" class="py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-24">
+                <h2 class="text-4xl md:text-5xl font-bold text-apple-text mb-6 tracking-tight">The multi-million dollar
+                    problem with modern e-commerce.</h2>
+                <p class="text-xl text-apple-gray font-light leading-relaxed">
+                    Customers want to buy, but they hesitate. They can't feel the texture, they can't see the back, and
+                    they aren't sure of the scale. <span class="text-apple-text font-medium">Hesitation kills
+                        conversions.</span>
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <!-- Point 1 -->
+                <div class="bg-apple-bg p-10 rounded-3xl group hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" class="text-apple-blue">
+                            <path d="M12 20V10M18 20V4M6 20v-4" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-apple-text">Up to 40% Higher Conversions</h3>
+                    <p class="text-apple-gray font-light leading-relaxed">
+                        When users can spin and zoom into a product, psychological ownership takes over. They spend more
+                        time on the page and are significantly more likely to click 'Add to Cart'.
+                    </p>
+                </div>
+
+                <!-- Point 2 -->
+                <div class="bg-apple-bg p-10 rounded-3xl group hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" class="text-apple-blue">
+                            <path d="M3 3h18v18H3zM15 9l-6 6M9 9l6 6" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-apple-text">Slash Return Rates</h3>
+                    <p class="text-apple-gray font-light leading-relaxed">
+                        Returns destroy profit margins. 3D visualization ensures the customer knows exactly what they
+                        are getting from every angle, drastically reducing "not as expected" returns.
+                    </p>
+                </div>
+
+                <!-- Point 3 -->
+                <div class="bg-apple-bg p-10 rounded-3xl group hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" class="text-apple-blue">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 6v6l4 2" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-apple-text">Premium Brand Perception</h3>
+                    <p class="text-apple-gray font-light leading-relaxed">
+                        Apple doesn't sell $1,000 phones with flat JPEGs. Offering interactive 3D instantly positions
+                        your brand as a premium, high-trust industry leader in the eyes of the consumer.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Features Showcase -->
+    <section id="features" class="py-32 bg-apple-text text-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Engineered for speed.<br>Built to
+                        scale.</h2>
+                    <p class="text-gray-400 font-light text-xl mb-12 leading-relaxed">
+                        We don't use clunky plugins. We write raw, optimized WebGL code that loads instantly on mobile
+                        devices and integrates seamlessly with your existing tech stack.
+                    </p>
+
+                    <div class="space-y-8">
+                        <div class="flex gap-4">
+                            <div class="mt-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="#007AFF" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg></div>
+                            <div>
+                                <h4 class="text-xl font-bold mb-2">Zero-Friction Integration</h4>
+                                <p class="text-gray-400 font-light">Whether you are on Shopify, WooCommerce, or a custom
+                                    Next.js stack, our viewer embeds via a single, lightweight iframe or script.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="mt-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="#007AFF" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg></div>
+                            <div>
+                                <h4 class="text-xl font-bold mb-2">Real-Time Customization</h4>
+                                <p class="text-gray-400 font-light">Let users swap colors, materials, and parts
+                                    instantly. Perfect for custom furniture, luxury watches, and complex machinery.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="mt-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="#007AFF" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg></div>
+                            <div>
+                                <h4 class="text-xl font-bold mb-2">Silky Smooth Physics</h4>
+                                <p class="text-gray-400 font-light">Inertia-based rotation, buttery-smooth zooming, and
+                                    optimized polygon counts ensure a flawless experience even on older smartphones.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Abstract Technical Visual -->
+                <div class="bg-white/5 border border-white/10 rounded-3xl p-8 relative">
+                    <!-- A decorative wireframe graphic to imply 3D engineering -->
+                    <div
+                        class="aspect-square border border-white/10 rounded-full flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 border-[0.5px] border-apple-blue/30 rounded-full scale-75"></div>
+                        <div class="absolute inset-0 border-[0.5px] border-apple-blue/20 rounded-full scale-50"></div>
+                        <div class="w-1 h-full bg-apple-blue/20 absolute transform rotate-45"></div>
+                        <div class="w-1 h-full bg-apple-blue/20 absolute transform -rotate-45"></div>
+                        <div
+                            class="text-center z-10 bg-apple-text/80 backdrop-blur p-6 rounded-2xl border border-white/10">
+                            <p class="text-4xl font-bold text-white mb-2">60<span
+                                    class="text-lg text-apple-blue">FPS</span></p>
+                            <p class="text-sm text-gray-400 uppercase tracking-widest">Guaranteed Performance</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section id="contact" class="py-32 bg-apple-bg text-center">
+        <div class="max-w-3xl mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-apple-text mb-6 tracking-tight">Ready to upgrade your store?
+            </h2>
+            <p class="text-xl text-apple-gray font-light mb-12 leading-relaxed">
+                Let's discuss how a custom 3D viewer can lower your return rates and increase your conversion margins.
+                Book a direct consultation with our lead engineer.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="https://wa.me/923247556451" target="_blank" rel="noopener noreferrer"
+                    class="px-8 py-4 bg-[#25D366] text-white rounded-full font-semibold text-lg hover:bg-[#1EBE5D] transition-all shadow-lg flex items-center justify-center gap-3">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                        <path
+                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
+                    </svg>
+                    Chat on WhatsApp
+                </a>
+                <a href="mailto:info@ibtikarz.com"
+                    class="px-8 py-4 bg-white text-apple-text rounded-full font-semibold text-lg hover:bg-gray-50 border border-apple-border transition-all shadow-sm flex items-center justify-center gap-2">
+                    Email the Studio
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white py-8 border-t border-apple-border">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-sm text-apple-gray font-light">
+                &copy; 2026 IbtikarZ. All rights reserved. Engineered in Pakistan.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 20) {
+                nav.classList.add('shadow-sm');
+            } else {
+                nav.classList.remove('shadow-sm');
+            }
+        });
+
+        // Scroll Reveal Animations
+        document.addEventListener("DOMContentLoaded", () => {
+            const elementsToReveal = document.querySelectorAll('section > div');
+            elementsToReveal.forEach(el => el.classList.add('reveal'));
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            elementsToReveal.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>
