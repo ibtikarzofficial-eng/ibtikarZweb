@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | IbtikarZ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { colors: { apple: { text: '#1D1D1F', textDark: '#F5F5F7', gray: '#86868B', bg: '#F5F5F7', bgDark: '#1D1D1F', border: '#E5E5EA', borderDark: '#424245', blue: '#007AFF' } }, fontFamily: { sans: ['Poppins', 'system-ui', 'sans-serif'] } } } }</script>
+    <style>
+        body {
+            font-family: 'Poppins', system-ui, sans-serif;
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .dark .glass-nav {
+            background: rgba(29, 29, 31, 0.8);
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body class="antialiased bg-white dark:bg-black text-apple-text dark:text-white">
+    <nav class="fixed w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 py-4"><a href="index.html" class="font-bold text-xl">IbtikarZ<span
+                    class="text-apple-blue">.</span></a></div>
+    </nav>
+    <main class="pt-32 pb-24 max-w-3xl mx-auto px-4">
+        <h1 class="text-4xl font-bold mb-8">Privacy Policy</h1>
+        <p class="mb-4 text-apple-gray dark:text-apple-grayDark">Last updated: <span id="date"></span></p>
+        <div class="prose dark:prose-invert text-apple-gray dark:text-apple-grayDark">
+            <p class="mb-4">At IbtikarZ, accessible from ibtikarz.com, one of our main priorities is the privacy of our
+                visitors. This Privacy Policy document contains types of information that is collected and recorded by
+                IbtikarZ and how we use it.</p>
+            <h2 class="text-2xl font-bold text-apple-text dark:text-white mt-8 mb-4">Log Files</h2>
+            <p class="mb-4">IbtikarZ follows a standard procedure of using log files. These files log visitors when they
+                visit websites. The information collected includes internet protocol (IP) addresses, browser type,
+                Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the number of
+                clicks.</p>
+            <h2 class="text-2xl font-bold text-apple-text dark:text-white mt-8 mb-4">Cookies and Web Beacons</h2>
+            <p class="mb-4">Like any other website, IbtikarZ uses 'cookies'. These cookies are used to store information
+                including visitors' preferences, and the pages on the website that the visitor accessed or visited.</p>
+            <h2 class="text-2xl font-bold text-apple-text dark:text-white mt-8 mb-4">Contact Us</h2>
+            <p class="mb-4">If you have additional questions or require more information about our Privacy Policy, do
+                not hesitate to contact us at info@ibtikarz.com.</p>
+        </div>
+    </main>
+    <script>document.getElementById('date').textContent = new Date().toLocaleDateString();</script>
+</body>
+
+</html>
