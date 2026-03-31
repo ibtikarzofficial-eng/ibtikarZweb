@@ -4,45 +4,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IbtikarZ | Creative Engineering Studio</title>
+  <title>IbtikarZ | Creative Engineering Studio • 3D Web Experiences</title>
+  <meta name="description"
+    content="Transform passive browsers into active explorers. Premium 3D product viewers and interactive property tours built with WebGL.">
 
-  <!-- Google Fonts: Poppins -->
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="IbtikarZ | Creative Engineering Studio">
+  <meta property="og:description" content="The web, in 3D. Immersive digital experiences that convert.">
+  <meta property="og:image" content="https://ibtikarz.com/og-image.jpg">
+
+  <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Three.js for interactive 3D elements -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 
-  <!-- Tailwind Configuration for Apple-like aesthetic -->
+  <!-- Tailwind Config -->
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           colors: {
             apple: {
               text: '#1D1D1F',
+              textDark: '#F5F5F7',
               gray: '#86868B',
+              grayDark: '#AEAEB2',
               blue: '#007AFF',
               blueHover: '#005BB5',
               bg: '#F5F5F7',
-              border: '#E5E5EA'
+              bgDark: '#1D1D1F',
+              border: '#E5E5EA',
+              borderDark: '#424245'
             }
           },
           fontFamily: {
-            sans: ['Poppins', 'sans-serif'],
+            sans: ['Poppins', 'system-ui', 'sans-serif'],
           },
           animation: {
             'float': 'float 6s ease-in-out infinite',
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
           },
           keyframes: {
             float: {
               '0%, 100%': { transform: 'translateY(0)' },
-              '50%': { transform: 'translateY(-20px)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(24px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
             }
+          },
+          transitionTimingFunction: {
+            'apple': 'cubic-bezier(0.4, 0, 0.2, 1)',
           }
         }
       }
@@ -50,51 +73,85 @@
   </script>
 
   <style>
+    /* Base Styles */
+    :root {
+      --scrollbar-thumb: #D1D1D6;
+      --scrollbar-track: #F5F5F7;
+    }
+
+    .dark {
+      --scrollbar-thumb: #424245;
+      --scrollbar-track: #1D1D1F;
+    }
+
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Poppins', system-ui, -apple-system, sans-serif;
       color: #1D1D1F;
       background-color: #FFFFFF;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Custom clean scrollbar */
+    .dark body {
+      color: #F5F5F7;
+      background-color: #000000;
+    }
+
+    /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
+      height: 8px;
     }
 
     ::-webkit-scrollbar-track {
-      background: #F5F5F7;
+      background: var(--scrollbar-track);
     }
 
     ::-webkit-scrollbar-thumb {
-      background: #D1D1D6;
+      background: var(--scrollbar-thumb);
       border-radius: 4px;
+      transition: background 0.2s ease;
     }
 
     ::-webkit-scrollbar-thumb:hover {
       background: #86868B;
     }
 
+    /* Glassmorphism Navigation */
     .glass-nav {
       background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
 
-    /* 3D Canvas Containers */
-    #hero-canvas-container {
+    .dark .glass-nav {
+      background: rgba(29, 29, 31, 0.8);
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* 3D Canvas */
+    .canvas-container {
       width: 100%;
       height: 500px;
       position: relative;
       cursor: grab;
+      border-radius: 1.5rem;
+      overflow: hidden;
     }
 
-    #hero-canvas-container:active {
+    .canvas-container:active {
       cursor: grabbing;
     }
 
-    /* Form Input styling */
+    .canvas-container canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Form Inputs */
     .apple-input {
       width: 100%;
       background: transparent;
@@ -102,8 +159,12 @@
       border-bottom: 1px solid #D1D1D6;
       padding: 12px 0;
       font-size: 1rem;
-      color: #1D1D1F;
-      transition: border-color 0.3s ease;
+      color: inherit;
+      transition: border-color 0.2s ease;
+    }
+
+    .dark .apple-input {
+      border-bottom-color: #424245;
     }
 
     .apple-input:focus {
@@ -116,286 +177,525 @@
       font-weight: 300;
     }
 
-    /* Scroll Reveal Animations */
+    .dark .apple-input::placeholder {
+      color: #AEAEB2;
+    }
+
+    /* Scroll Reveal */
     .reveal {
       opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+      transform: translateY(32px);
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, transform;
     }
 
     .reveal.active {
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* Iframe Viewer Enhancements */
+    .viewer-frame {
+      position: relative;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      background: linear-gradient(135deg, #F9F9FB 0%, #F0F0F3 100%);
+    }
+
+    .dark .viewer-frame {
+      background: linear-gradient(135deg, #1C1C1E 0%, #2C2C2E 100%);
+    }
+
+    .viewer-skeleton {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg,
+          rgba(229, 229, 234, 0.3) 25%,
+          rgba(229, 229, 234, 0.5) 50%,
+          rgba(229, 229, 234, 0.3) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      z-index: 5;
+    }
+
+    .dark .viewer-skeleton {
+      background: linear-gradient(90deg,
+          rgba(66, 66, 69, 0.3) 25%,
+          rgba(66, 66, 69, 0.5) 50%,
+          rgba(66, 66, 69, 0.3) 75%);
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+    /* Reduced Motion Preference */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .reveal {
+        transition: none !important;
+      }
+    }
+
+    /* Focus Visible for Accessibility */
+    :focus-visible {
+      outline: 2px solid #007AFF;
+      outline-offset: 2px;
+    }
+
+    /* Dark mode toggle button */
+    .theme-toggle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .dark .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
   </style>
 </head>
 
 <body class="antialiased selection:bg-apple-blue selection:text-white">
 
+  <!-- Skip Link for Accessibility -->
+  <a href="#main-content"
+    class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-apple-blue focus:text-white focus:rounded-lg">
+    Skip to main content
+  </a>
+
   <!-- Navigation -->
-  <nav class="fixed w-full z-50 glass-nav transition-all duration-300" id="navbar">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-      <a href="#" class="text-2xl font-bold tracking-tight text-apple-text flex items-center gap-2">
-        <!-- Abstract Logo Icon -->
+  <nav class="fixed w-full z-50 glass-nav transition-all duration-300" id="navbar" role="navigation"
+    aria-label="Main navigation">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
+      <a href="#" class="text-xl sm:text-2xl font-bold tracking-tight flex items-center gap-2 group"
+        aria-label="IbtikarZ Home">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          class="text-apple-blue">
+          class="text-apple-blue transition-transform group-hover:scale-110" aria-hidden="true">
           <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linejoin="round"
             stroke-linecap="round" />
         </svg>
         IbtikarZ<span class="text-apple-blue">.</span>
       </a>
 
-      <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-apple-gray">
-        <a href="#services" class="hover:text-apple-text transition-colors">Services</a>
-        <a href="#products" class="hover:text-apple-text transition-colors">3D Products</a>
-        <a href="#studio" class="hover:text-apple-text transition-colors">The Studio</a>
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex items-center space-x-1 lg:space-x-8 text-sm font-medium">
+        <a href="#services"
+          class="px-3 py-2 text-apple-gray hover:text-apple-text transition-colors rounded-lg hover:bg-black/5 dark:hover:bg-white/10">Services</a>
+        <a href="#products"
+          class="px-3 py-2 text-apple-gray hover:text-apple-text transition-colors rounded-lg hover:bg-black/5 dark:hover:bg-white/10">3D
+          Products</a>
+        <a href="#studio"
+          class="px-3 py-2 text-apple-gray hover:text-apple-text transition-colors rounded-lg hover:bg-black/5 dark:hover:bg-white/10">The
+          Studio</a>
         <a href="#contact"
-          class="px-5 py-2.5 bg-apple-blue text-white rounded-full hover:bg-apple-blueHover transition-all shadow-sm hover:shadow-md font-semibold">
+          class="ml-2 px-5 py-2.5 bg-apple-blue text-white rounded-full hover:bg-apple-blueHover transition-all shadow-sm hover:shadow-md font-semibold focus:ring-2 focus:ring-apple-blue focus:ring-offset-2 dark:focus:ring-offset-black">
           Request Audit
         </a>
+
+        <!-- Dark Mode Toggle -->
+        <button id="themeToggle" class="theme-toggle ml-2" aria-label="Toggle dark mode" aria-pressed="false">
+          <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+          <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        </button>
       </div>
 
       <!-- Mobile Menu Button -->
-      <button class="md:hidden text-apple-text">
-        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round">
+      <button class="md:hidden p-2 text-apple-text hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-colors"
+        aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu" id="mobileMenuBtn">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true">
           <line x1="3" y1="12" x2="21" y2="12"></line>
           <line x1="3" y1="6" x2="21" y2="6"></line>
           <line x1="3" y1="18" x2="21" y2="18"></line>
         </svg>
       </button>
     </div>
+
+    <!-- Mobile Menu (Hidden by default) -->
+    <div id="mobile-menu"
+      class="hidden md:hidden bg-white dark:bg-black border-t border-apple-border dark:border-apple-borderDark px-4 py-4 space-y-2"
+      role="menu">
+      <a href="#services"
+        class="block px-4 py-3 text-apple-text hover:bg-apple-bg dark:hover:bg-white/10 rounded-lg transition-colors"
+        role="menuitem">Services</a>
+      <a href="#products"
+        class="block px-4 py-3 text-apple-text hover:bg-apple-bg dark:hover:bg-white/10 rounded-lg transition-colors"
+        role="menuitem">3D Products</a>
+      <a href="#studio"
+        class="block px-4 py-3 text-apple-text hover:bg-apple-bg dark:hover:bg-white/10 rounded-lg transition-colors"
+        role="menuitem">The Studio</a>
+      <a href="#contact"
+        class="block px-4 py-3 text-apple-blue font-semibold hover:bg-apple-bg dark:hover:bg-white/10 rounded-lg transition-colors"
+        role="menuitem">Request Audit</a>
+    </div>
   </nav>
 
   <!-- Hero Section -->
-  <section class="relative min-h-screen flex items-center pt-24 pb-12 overflow-hidden bg-white">
-    <div class="max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
-      <div class="z-10 order-1">
-        <p class="text-blue-600 font-bold tracking-[0.2em] text-xs uppercase mb-4">
-          Creative Engineering Studio
-        </p>
-
-        <h1 class="text-6xl md:text-8xl font-extrabold tracking-tight text-slate-900 leading-[0.95] mb-8">
-          The web,<br><span class="text-blue-600">in 3D.</span>
-        </h1>
-
-        <p class="text-lg md:text-xl text-slate-500 font-medium max-w-md mb-10 leading-relaxed">
-          We bridge the gap between static browsing and digital reality. Turn passive visitors into <span
-            class="text-slate-900">active explorers.</span>
-        </p>
-
-        <div class="flex flex-wrap gap-4 items-center">
-          <a href="3dviewer.html"
-            class="px-8 py-4 bg-slate-950 text-white rounded-full hover:bg-blue-600 hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_15px_25px_rgba(37,99,235,0.2)] font-semibold text-base">
-            Product Viewer
-          </a>
-          <a href="realestate.html"
-            class="px-8 py-4 bg-transparent border border-slate-200 text-slate-900 rounded-full hover:border-blue-600 hover:text-blue-600 transition-all duration-300 font-semibold text-base flex items-center justify-center gap-2">
-            Property Discovery
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </a>
-        </div>
-
-        <div class="z-10 order-2 relative w-full h-[500px]" id="hero-canvas-container">
-          <canvas id="hero-canvas" class="w-full h-full cursor-grab active:cursor-grabbing focus:outline-none"></canvas>
-
-          <div
-            class="absolute bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap bg-white/40 backdrop-blur-md border border-white/50 px-4 py-2 rounded-full shadow-sm text-[10px] font-bold tracking-tighter text-slate-500 uppercase flex items-center gap-2">
-            <span class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
-            Interact with the scene
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="z-10 order-2 relative group" id="hero-canvas-container">
+  <section class="relative min-h-screen flex items-center pt-24 pb-12 overflow-hidden bg-white dark:bg-black"
+    aria-labelledby="hero-heading">
+    <!-- Background Decorations -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
       <div
-        class="relative w-full aspect-square min-h-[400px] md:min-h-[500px] rounded-3xl overflow-hidden bg-slate-50/50 border border-slate-100 shadow-inner">
-
-        <canvas id="hero-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
-
-        <div
-          class="absolute bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-bold uppercase tracking-widest text-slate-500 flex items-center gap-3 pointer-events-none bg-white/80 backdrop-blur-md px-5 py-2 rounded-full border border-white/20 shadow-sm transition-opacity group-hover:opacity-0">
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-          </span>
-          Drag to explore
-        </div>
+        class="absolute top-1/4 right-0 w-[600px] h-[600px] bg-blue-100/40 dark:bg-blue-900/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4">
       </div>
-    </div>
-
+      <div
+        class="absolute bottom-0 left-10 w-[300px] h-[300px] bg-indigo-50/40 dark:bg-indigo-900/20 rounded-full blur-[80px]">
+      </div>
     </div>
 
     <div
-      class="absolute top-1/2 right-0 w-[600px] h-[600px] bg-blue-100/50 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4 -z-10">
-    </div>
-    <div class="absolute bottom-0 left-10 w-[300px] h-[300px] bg-indigo-50/50 rounded-full blur-[80px] -z-10"></div>
-  </section>
+      class="max-w-7xl mx-auto px-4 sm:px-6 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10">
 
-  <!-- Flagship Products -->
-  <section id="products" class="py-32 bg-apple-bg">
-    <div class="max-w-7xl mx-auto px-6">
-      <div class="text-center max-w-2xl mx-auto mb-24">
-        <h2 class="text-4xl md:text-5xl font-bold text-apple-text mb-4 tracking-tight">Proprietary 3D Experiences.</h2>
-        <p class="text-xl text-apple-gray font-light">Built to close the sale before a sales call is ever made.</p>
-      </div>
+      <!-- Content Column -->
+      <div class="order-2 lg:order-1" id="main-content">
+        <p class="text-blue-600 dark:text-blue-400 font-bold tracking-[0.2em] text-xs uppercase mb-4"
+          aria-label="Company tagline">
+          Creative Engineering Studio
+        </p>
 
-      <!-- Product 1: 3D Product Viewer -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-32">
-        <div>
-          <span class="text-sm font-semibold text-apple-blue uppercase tracking-wider">Product 01</span>
-          <h3 class="text-3xl md:text-4xl font-bold mt-2 mb-6 text-apple-text">Product Viewer</h3>
-          <p class="text-lg text-apple-gray font-light mb-8 leading-relaxed">
-            Look closer. Let your customers spin, zoom, and customize luxury products directly in their browser. No
-            apps. No plugins. Just instant, flawless interaction.
-          </p>
-          <ul class="space-y-4 mb-10 text-apple-text">
-            <li class="flex items-center gap-3">
-              <svg class="text-apple-blue" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        <h1 id="hero-heading"
+          class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[0.95] mb-6 sm:mb-8">
+          The web,<br><span class="text-blue-600 dark:text-blue-400">in 3D.</span>
+        </h1>
+
+        <p
+          class="text-lg md:text-xl text-slate-500 dark:text-apple-grayDark font-medium max-w-md mb-8 sm:mb-10 leading-relaxed">
+          We bridge the gap between static browsing and digital reality. Turn passive visitors into <span
+            class="text-slate-900 dark:text-white font-semibold">active explorers.</span>
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-wrap gap-3 sm:gap-4 items-center mb-8">
+          <a href="./3dview.html"
+            class="group px-6 sm:px-8 py-3.5 sm:py-4 bg-slate-950 dark:bg-white text-white dark:text-slate-950 rounded-full hover:bg-blue-600 dark:hover:bg-blue-500 hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-sm sm:text-base focus:ring-2 focus:ring-apple-blue focus:ring-offset-2 dark:focus:ring-offset-black">
+            <span class="flex items-center gap-2">
+              Product Viewer
+              <svg class="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
-              360° orbital rotation with inertia physics
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="text-apple-blue" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
-              Real-time color and material variant switching
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="text-apple-blue" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
-              Embeds instantly into Shopify or custom platforms
-            </li>
-          </ul>
-          <a href="3dviewer.html"
-            class="inline-flex items-center gap-2 text-apple-blue font-semibold hover:text-apple-blueHover transition-colors">
-            Explore the Business Case
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M5 12h14M12 5l7 7-7 7" />
+            </span>
+          </a>
+          <a href="./realestate.html"
+            class="group px-6 sm:px-8 py-3.5 sm:py-4 bg-transparent border border-slate-200 dark:border-apple-borderDark text-slate-900 dark:text-white rounded-full hover:border-blue-600 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 focus:ring-2 focus:ring-apple-blue focus:ring-offset-2 dark:focus:ring-offset-black">
+            Property Discovery
+            <svg class="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </a>
         </div>
 
-        <!-- Actual Live 3D Viewer -->
+        <!-- Trust Badges -->
         <div
-          class="bg-white rounded-3xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)] relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
+          class="flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm text-apple-gray dark:text-apple-grayDark">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>No plugins required</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Mobile optimized</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>VR ready</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3D Canvas Column (FIXED: Single container, proper ID) -->
+      <div class="order-1 lg:order-2 relative" role="region" aria-label="Interactive 3D preview">
+        <div
+          class="canvas-container bg-slate-50/50 dark:bg-white/5 border border-slate-100 dark:border-apple-borderDark shadow-inner"
+          id="hero-canvas-wrapper">
+          <canvas id="hero-canvas" class="w-full h-full cursor-grab active:cursor-grabbing focus:outline-none"
+            tabindex="0" aria-label="Interactive 3D geometric model. Drag to rotate."></canvas>
+
+          <!-- Loading State -->
+          <div id="canvas-loader"
+            class="absolute inset-0 flex flex-col items-center justify-center bg-slate-50/80 dark:bg-black/80 z-10"
+            aria-live="polite">
+            <div class="w-8 h-8 border-3 border-apple-blue/30 border-t-apple-blue rounded-full animate-spin mb-3"></div>
+            <span class="text-xs text-apple-gray dark:text-apple-grayDark">Loading 3D scene...</span>
+          </div>
+
+          <!-- Interaction Hint -->
           <div
-            class="aspect-square bg-[#F9F9FB] rounded-2xl relative overflow-hidden shadow-inner border border-black/5 flex items-center justify-center">
-            <iframe src="https://3dviewer.ibtikarZ.com"
-              style="width: 100%; height: 100%; border: none; outline: none; background: transparent;" scrolling="no"
-              allow="autoplay; fullscreen; xr-spatial-tracking" class="w-full h-full object-cover z-10">
-            </iframe>
-            <!-- Loading Indicator behind iframe -->
-            <div class="absolute inset-0 flex items-center justify-center z-0">
-              <div class="w-8 h-8 border-4 border-apple-blue/30 border-t-apple-blue rounded-full animate-spin"></div>
+            class="absolute bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap bg-white/70 dark:bg-black/70 backdrop-blur-md border border-white/30 dark:border-white/10 px-4 py-2 rounded-full shadow-sm text-[10px] sm:text-xs font-bold tracking-tighter text-slate-500 dark:text-apple-grayDark uppercase flex items-center gap-2 pointer-events-none">
+            <span class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
+            Drag to explore
+          </div>
+        </div>
+
+        <!-- Screen Reader Description -->
+        <p id="canvas-description" class="sr-only">
+          Interactive 3D geometric shape. Use your mouse or touch to rotate the model. The shape features a white
+          surface with blue wireframe edges, representing our engineering-focused 3D web technology.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flagship Products Section -->
+  <section id="products" class="py-24 sm:py-32 bg-apple-bg dark:bg-apple-bgDark" aria-labelledby="products-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="text-center max-w-2xl mx-auto mb-16 sm:mb-24 reveal">
+        <h2 id="products-heading"
+          class="text-3xl sm:text-4xl md:text-5xl font-bold text-apple-text dark:text-white mb-4 tracking-tight">
+          Proprietary 3D Experiences.</h2>
+        <p class="text-lg sm:text-xl text-apple-gray dark:text-apple-grayDark font-light">Built to close the sale before
+          a sales call is ever made.</p>
+      </div>
+
+      <!-- Product 1: 3D Product Viewer -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-24 lg:mb-32">
+        <div class="reveal">
+          <span class="text-sm font-semibold text-apple-blue uppercase tracking-wider">Product 01</span>
+          <h3 class="text-2xl sm:text-3xl md:text-4xl font-bold mt-2 mb-5 sm:mb-6 text-apple-text dark:text-white">
+            Product Viewer</h3>
+          <p
+            class="text-base sm:text-lg text-apple-gray dark:text-apple-grayDark font-light mb-6 sm:mb-8 leading-relaxed">
+            Look closer. Let your customers spin, zoom, and customize luxury products directly in their browser. No
+            apps. No plugins. Just instant, flawless interaction.
+          </p>
+          <ul class="space-y-3 sm:space-y-4 mb-8 sm:mb-10 text-apple-text dark:text-white">
+            <li class="flex items-start gap-3">
+              <svg class="text-apple-blue mt-0.5 flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor"
+                stroke-width="2" aria-hidden="true">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <span>360° orbital rotation with inertia physics</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="text-apple-blue mt-0.5 flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor"
+                stroke-width="2" aria-hidden="true">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <span>Real-time color and material variant switching</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="text-apple-blue mt-0.5 flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor"
+                stroke-width="2" aria-hidden="true">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <span>Embeds instantly into Shopify or custom platforms</span>
+            </li>
+          </ul>
+          <a href="3dview.html"
+            class="inline-flex items-center gap-2 text-apple-blue dark:text-blue-400 font-semibold hover:text-apple-blueHover dark:hover:text-blue-300 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-apple-blue focus-visible:ring-offset-2 dark:focus-visible:ring-offset-black rounded">
+            Explore the Business Case
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </a>
+        </div>
+
+        <!-- Live 3D Viewer with Enhanced Loading -->
+        <div class="reveal">
+          <div
+            class="viewer-frame p-4 sm:p-6 lg:p-8 shadow-lg relative group transition-all duration-500 hover:shadow-xl">
+            <div
+              class="aspect-square bg-[#F9F9FB] dark:bg-[#1C1C1E] rounded-2xl relative overflow-hidden shadow-inner border border-black/5 dark:border-white/10">
+              <!-- Skeleton Loader -->
+              <div class="viewer-skeleton rounded-2xl"></div>
+
+              <iframe src="https://3dviewer.ibtikarz.com"
+                title="Interactive 3D product viewer - rotate, zoom, and customize products" loading="lazy"
+                style="width: 100%; height: 100%; border: none; outline: none; background: transparent; opacity: 0; transition: opacity 0.3s ease;"
+                scrolling="no" allow="autoplay; fullscreen; xr-spatial-tracking" class="w-full h-full object-cover z-10"
+                id="product-viewer-iframe"
+                onload="this.style.opacity='1'; this.previousElementSibling.style.display='none'">
+              </iframe>
+
+              <!-- Fallback for blocked iframes -->
+              <noscript>
+                <div
+                  class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/90 dark:bg-black/90 p-6 text-center">
+                  <svg class="w-10 h-10 text-apple-blue mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <p class="font-medium text-apple-text dark:text-white mb-1">Interactive viewer requires JavaScript</p>
+                  <a href="https://3dviewer.ibtikarz.com" target="_blank" rel="noopener"
+                    class="text-apple-blue hover:underline text-sm">Open in new tab →</a>
+                </div>
+              </noscript>
+            </div>
+
+            <!-- Viewer Controls Hint -->
+            <div
+              class="absolute bottom-3 right-3 flex items-center gap-1.5 text-[10px] text-apple-gray dark:text-apple-grayDark bg-white/80 dark:bg-black/80 px-2.5 py-1.5 rounded-full backdrop-blur-sm pointer-events-none">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5" />
+              </svg>
+              Drag • Scroll to zoom
             </div>
           </div>
         </div>
       </div>
 
       <!-- Product 2: Property Viewer -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <!-- Property Viewer Frame -->
+        <div class="order-2 lg:order-1 reveal">
+          <div class="viewer-frame p-4 sm:p-6 lg:p-8 shadow-lg group transition-all duration-500 hover:shadow-xl">
+            <div
+              class="aspect-[4/3] bg-apple-bg dark:bg-apple-bgDark rounded-2xl relative overflow-hidden shadow-inner border border-black/5 dark:border-white/10">
+              <!-- Skeleton Loader -->
+              <div class="viewer-skeleton rounded-2xl"></div>
 
-        <!-- Actual Live Property Viewer -->
-        <div
-          class="order-2 lg:order-1 bg-white rounded-3xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)] group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
-          <div
-            class="aspect-[4/3] bg-apple-bg rounded-2xl relative overflow-hidden shadow-inner border border-black/5 flex items-center justify-center">
-            <iframe src="https://realestate.ibtikarz.com/" title="Aghaaz 5-Marla 3D Explorer"
-              style="width: 100%; height: 100%; border: none; display: block;"
-              allow="xr-spatial-tracking; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen class="w-full h-full z-10">
-            </iframe>
-            <!-- Loading Indicator behind iframe -->
-            <div class="absolute inset-0 flex items-center justify-center z-0">
-              <div class="w-8 h-8 border-4 border-apple-blue/30 border-t-apple-blue rounded-full animate-spin"></div>
+              <iframe src="https://realestate.ibtikarz.com/"
+                title="Interactive 3D property walkthrough - explore floor plans in first-person view" loading="lazy"
+                style="width: 100%; height: 100%; border: none; display: block; opacity: 0; transition: opacity 0.3s ease;"
+                allow="xr-spatial-tracking; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                allowfullscreen class="w-full h-full z-10" id="property-viewer-iframe"
+                onload="this.style.opacity='1'; this.previousElementSibling.style.display='none'">
+              </iframe>
+
+              <noscript>
+                <div
+                  class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/90 dark:bg-black/90 p-6 text-center">
+                  <svg class="w-10 h-10 text-apple-blue mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                  <p class="font-medium text-apple-text dark:text-white mb-1">Property viewer requires JavaScript</p>
+                  <a href="https://realestate.ibtikarz.com/" target="_blank" rel="noopener"
+                    class="text-apple-blue hover:underline text-sm">Open directly →</a>
+                </div>
+              </noscript>
             </div>
           </div>
         </div>
 
-        <div class="order-1 lg:order-2">
+        <!-- Property Viewer Content -->
+        <div class="order-1 lg:order-2 reveal">
           <span class="text-sm font-semibold text-apple-blue uppercase tracking-wider">Product 02</span>
-          <h3 class="text-3xl md:text-4xl font-bold mt-2 mb-6 text-apple-text">Property Viewer</h3>
-          <p class="text-lg text-apple-gray font-light mb-8 leading-relaxed">
+          <h3 class="text-2xl sm:text-3xl md:text-4xl font-bold mt-2 mb-5 sm:mb-6 text-apple-text dark:text-white">
+            Property Viewer</h3>
+          <p
+            class="text-base sm:text-lg text-apple-gray dark:text-apple-grayDark font-light mb-6 sm:mb-8 leading-relaxed">
             Step inside. Selling off-plan? Give your clients a fully interactive, first-person tour of their future
             property from anywhere in the world.
           </p>
-          <ul class="space-y-4 mb-10 text-apple-text">
-            <li class="flex items-center gap-3">
-              <svg class="text-apple-blue" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <ul class="space-y-3 sm:space-y-4 mb-8 sm:mb-10 text-apple-text dark:text-white">
+            <li class="flex items-start gap-3">
+              <svg class="text-apple-blue mt-0.5 flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor"
+                stroke-width="2" aria-hidden="true">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
               </svg>
-              Fluid first-person walkthrough modes
+              <span>Fluid first-person walkthrough modes</span>
             </li>
-            <li class="flex items-center gap-3">
-              <svg class="text-apple-blue" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <li class="flex items-start gap-3">
+              <svg class="text-apple-blue mt-0.5 flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor"
+                stroke-width="2" aria-hidden="true">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
               </svg>
-              Day/Night cycle and lighting simulations
+              <span>Day/Night cycle and lighting simulations</span>
             </li>
-            <li class="flex items-center gap-3">
-              <svg class="text-apple-blue" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <li class="flex items-start gap-3">
+              <svg class="text-apple-blue mt-0.5 flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor"
+                stroke-width="2" aria-hidden="true">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
               </svg>
-              Shareable links for remote client presentations
+              <span>Shareable links for remote client presentations</span>
             </li>
           </ul>
           <a href="realestate.html"
-            class="inline-flex items-center gap-2 text-apple-blue font-semibold hover:text-apple-blueHover transition-colors">
+            class="inline-flex items-center gap-2 text-apple-blue dark:text-blue-400 font-semibold hover:text-apple-blueHover dark:hover:text-blue-300 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-apple-blue focus-visible:ring-offset-2 dark:focus-visible:ring-offset-black rounded">
             See Developer ROI
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M5 12h14M12 5l7 7-7 7" />
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </a>
         </div>
       </div>
-
     </div>
   </section>
 
-  <!-- Core Disciplines -->
-  <section id="services" class="py-32 bg-white">
-    <div class="max-w-7xl mx-auto px-6">
-      <h2 class="text-3xl md:text-4xl font-bold text-center text-apple-text mb-20 tracking-tight">Engineering meets
-        aesthetics.</h2>
+  <!-- Core Disciplines Section -->
+  <section id="services" class="py-24 sm:py-32 bg-white dark:bg-black" aria-labelledby="services-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <h2 id="services-heading"
+        class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-apple-text dark:text-white mb-14 sm:mb-20 tracking-tight reveal">
+        Engineering meets aesthetics.</h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
         <!-- Service 1 -->
-        <div class="group">
+        <article class="group reveal">
           <div
-            class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-apple-blue transition-colors duration-300">
+            class="w-14 h-14 bg-blue-50 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-5 sm:mb-6 group-hover:bg-apple-blue transition-colors duration-300">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              class="text-apple-blue group-hover:text-white transition-colors duration-300">
+              class="text-apple-blue group-hover:text-white transition-colors duration-300" aria-hidden="true">
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
             </svg>
           </div>
-          <h3 class="text-xl font-bold mb-3 text-apple-text">High-Speed Architecture</h3>
-          <p class="text-apple-gray font-light leading-relaxed">
+          <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-apple-text dark:text-white">High-Speed Architecture
+          </h3>
+          <p class="text-apple-gray dark:text-apple-grayDark font-light leading-relaxed">
             Lightning-fast, conversion-optimized web apps engineered on modern stacks like Next.js. Built to scale
             without dropping a single frame.
           </p>
-        </div>
+        </article>
 
         <!-- Service 2 -->
-        <div class="group">
+        <article class="group reveal">
           <div
-            class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-apple-blue transition-colors duration-300">
+            class="w-14 h-14 bg-blue-50 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-5 sm:mb-6 group-hover:bg-apple-blue transition-colors duration-300">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              class="text-apple-blue group-hover:text-white transition-colors duration-300">
+              class="text-apple-blue group-hover:text-white transition-colors duration-300" aria-hidden="true">
               <path
                 d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
               </path>
@@ -403,79 +703,83 @@
               <line x1="12" y1="22.08" x2="12" y2="12"></line>
             </svg>
           </div>
-          <h3 class="text-xl font-bold mb-3 text-apple-text">Immersive WebGL</h3>
-          <p class="text-apple-gray font-light leading-relaxed">
+          <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-apple-text dark:text-white">Immersive WebGL</h3>
+          <p class="text-apple-gray dark:text-apple-grayDark font-light leading-relaxed">
             Pushing browser limits with spatial web design. We seamlessly integrate complex 3D environments into
             everyday browsing.
           </p>
-        </div>
+        </article>
 
         <!-- Service 3 -->
-        <div class="group">
+        <article class="group reveal">
           <div
-            class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-apple-blue transition-colors duration-300">
+            class="w-14 h-14 bg-blue-50 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-5 sm:mb-6 group-hover:bg-apple-blue transition-colors duration-300">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              class="text-apple-blue group-hover:text-white transition-colors duration-300">
+              class="text-apple-blue group-hover:text-white transition-colors duration-300" aria-hidden="true">
               <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
               <line x1="3" y1="9" x2="21" y2="9"></line>
               <line x1="9" y1="21" x2="9" y2="9"></line>
             </svg>
           </div>
-          <h3 class="text-xl font-bold mb-3 text-apple-text">Elite UI/UX & E-Commerce</h3>
-          <p class="text-apple-gray font-light leading-relaxed">
+          <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-apple-text dark:text-white">Elite UI/UX & E-Commerce
+          </h3>
+          <p class="text-apple-gray dark:text-apple-grayDark font-light leading-relaxed">
             Interfaces designed for maximum engagement. From catalog to checkout, every element is audited for
             conversion and premium perception.
           </p>
-        </div>
-
+        </article>
       </div>
     </div>
   </section>
 
   <!-- The Advantage Section -->
-  <section id="studio" class="py-32 bg-apple-text text-white">
-    <div class="max-w-7xl mx-auto px-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-        <div>
-          <h2 class="text-4xl md:text-5xl font-bold mb-6 tracking-tight leading-[1.2]">Built by an engineer who
-            understands business.</h2>
-          <p class="text-gray-400 font-light text-lg mb-8 leading-relaxed">
+  <section id="studio" class="py-24 sm:py-32 bg-apple-text dark:bg-white text-white dark:text-apple-text"
+    aria-labelledby="studio-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div class="reveal">
+          <h2 id="studio-heading"
+            class="text-3xl sm:text-4xl md:text-5xl font-bold mb-5 sm:mb-6 tracking-tight leading-[1.2]">Built by an
+            engineer who understands business.</h2>
+          <p class="text-gray-300 dark:text-apple-gray font-light text-base sm:text-lg mb-6 sm:mb-8 leading-relaxed">
             Great code is useless if it doesn't generate revenue. Founded by an IT Gold Medalist, IbtikarZ bridges the
             gap between academic rigor and commercial results.
           </p>
-          <p class="text-gray-400 font-light text-lg leading-relaxed mb-8">
+          <p class="text-gray-300 dark:text-apple-gray font-light text-base sm:text-lg leading-relaxed mb-8">
             Every line of code is written for performance; every design decision is made for conversion. We don't just
             build websites—we build digital assets that close deals.
           </p>
-          <div class="flex items-center gap-4 bg-white/10 p-4 rounded-2xl border border-white/10 w-max">
-            <div class="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center text-yellow-500">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <div
+            class="flex items-center gap-4 bg-white/10 dark:bg-black/20 p-4 rounded-2xl border border-white/10 dark:border-black/10 w-max">
+            <div class="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center text-yellow-400">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M12 15.25l-4.5 2.75 1.2-5.1L5 9.4l5.2-.45L12 4.25l1.8 4.7 5.2.45-3.7 3.5 1.2 5.1z" />
               </svg>
             </div>
             <div>
-              <p class="font-semibold text-white">Muhammad Abdullah Shah</p>
-              <p class="text-sm text-gray-400">Founder, IT Gold Medalist</p>
+              <p class="font-semibold text-white dark:text-white">Muhammad Abdullah Shah</p>
+              <p class="text-sm text-gray-300 dark:text-apple-gray">Founder, IT Gold Medalist</p>
             </div>
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-8">
-          <div class="border-l border-white/20 pl-6">
-            <p class="text-5xl font-bold text-apple-blue mb-2">100<span class="text-2xl">ms</span></p>
-            <p class="text-gray-400 font-medium">Target Load Time</p>
+        <div class="grid grid-cols-2 gap-6 sm:gap-8 reveal">
+          <div class="border-l border-white/20 dark:border-white/10 pl-5 sm:pl-6">
+            <p class="text-4xl sm:text-5xl font-bold text-apple-blue mb-1 sm:mb-2">100<span
+                class="text-xl sm:text-2xl">ms</span></p>
+            <p class="text-gray-300 dark:text-apple-gray font-medium text-sm sm:text-base">Target Load Time</p>
           </div>
-          <div class="border-l border-white/20 pl-6">
-            <p class="text-5xl font-bold text-apple-blue mb-2">360&deg;</p>
-            <p class="text-gray-400 font-medium">Product Coverage</p>
+          <div class="border-l border-white/20 dark:border-white/10 pl-5 sm:pl-6">
+            <p class="text-4xl sm:text-5xl font-bold text-apple-blue mb-1 sm:mb-2">360&deg;</p>
+            <p class="text-gray-300 dark:text-apple-gray font-medium text-sm sm:text-base">Product Coverage</p>
           </div>
-          <div class="border-l border-white/20 pl-6">
-            <p class="text-5xl font-bold text-apple-blue mb-2">Zero</p>
-            <p class="text-gray-400 font-medium">Bounce Target</p>
+          <div class="border-l border-white/20 dark:border-white/10 pl-5 sm:pl-6">
+            <p class="text-4xl sm:text-5xl font-bold text-apple-blue mb-1 sm:mb-2">Zero</p>
+            <p class="text-gray-300 dark:text-apple-gray font-medium text-sm sm:text-base">Bounce Target</p>
           </div>
-          <div class="border-l border-white/20 pl-6">
-            <p class="text-5xl font-bold text-apple-blue mb-2">B2B</p>
-            <p class="text-gray-400 font-medium">Enterprise Focused</p>
+          <div class="border-l border-white/20 dark:border-white/10 pl-5 sm:pl-6">
+            <p class="text-4xl sm:text-5xl font-bold text-apple-blue mb-1 sm:mb-2">B2B</p>
+            <p class="text-gray-300 dark:text-apple-gray font-medium text-sm sm:text-base">Enterprise Focused</p>
           </div>
         </div>
       </div>
@@ -483,109 +787,132 @@
   </section>
 
   <!-- Contact Section -->
-  <section id="contact" class="py-32 bg-apple-bg">
-    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16">
-
-      <div>
-        <h2 class="text-4xl md:text-5xl font-bold text-apple-text mb-6 tracking-tight">Let's build something
-          exceptional.</h2>
-        <p class="text-lg text-apple-gray font-light mb-12 max-w-md leading-relaxed">
+  <section id="contact" class="py-24 sm:py-32 bg-apple-bg dark:bg-apple-bgDark" aria-labelledby="contact-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+      <div class="reveal">
+        <h2 id="contact-heading"
+          class="text-3xl sm:text-4xl md:text-5xl font-bold text-apple-text dark:text-white mb-5 sm:mb-6 tracking-tight">
+          Let's build something exceptional.</h2>
+        <p
+          class="text-base sm:text-lg text-apple-gray dark:text-apple-grayDark font-light mb-10 sm:mb-12 max-w-md leading-relaxed">
           Whether you're a local brand or an international company, request a free digital audit and we'll show you
           exactly what's possible.
         </p>
 
-        <div class="space-y-6 text-apple-text">
-          <div class="flex items-center gap-4">
-            <svg class="text-apple-blue" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="space-y-5 sm:space-y-6 text-apple-text dark:text-white">
+          <div class="flex items-start gap-4">
+            <svg class="text-apple-blue mt-1 flex-shrink-0" width="24" height="24" fill="none" stroke="currentColor"
+              stroke-width="2" aria-hidden="true">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
               <circle cx="12" cy="10" r="3"></circle>
             </svg>
             <div>
               <p class="font-medium">Location</p>
-              <p class="text-apple-gray font-light">Mianwali, Punjab, Pakistan</p>
+              <p class="text-apple-gray dark:text-apple-grayDark font-light">Mianwali, Punjab, Pakistan</p>
             </div>
           </div>
-          <div class="flex items-center gap-4">
-            <svg class="text-apple-blue" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+          <div class="flex items-start gap-4">
+            <svg class="text-apple-blue mt-1 flex-shrink-0" width="24" height="24" fill="none" stroke="currentColor"
+              stroke-width="2" aria-hidden="true">
               <path
                 d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
               </path>
             </svg>
             <div>
               <p class="font-medium">Call Us</p>
-              <p class="text-apple-gray font-light">+92 311 636 3338</p>
+              <a href="tel:+923116363338"
+                class="text-apple-gray dark:text-apple-grayDark font-light hover:text-apple-blue dark:hover:text-blue-400 transition-colors">+92
+                311 636 3338</a>
             </div>
           </div>
-          <div class="flex items-center gap-4">
-            <svg class="text-apple-blue" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+          <div class="flex items-start gap-4">
+            <svg class="text-apple-blue mt-1 flex-shrink-0" width="24" height="24" fill="none" stroke="currentColor"
+              stroke-width="2" aria-hidden="true">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
               <polyline points="22,6 12,13 2,6"></polyline>
             </svg>
             <div>
               <p class="font-medium">Email</p>
-              <p class="text-apple-gray font-light">info@ibtikarz.com</p>
+              <a href="mailto:info@ibtikarz.com"
+                class="text-apple-gray dark:text-apple-grayDark font-light hover:text-apple-blue dark:hover:text-blue-400 transition-colors">info@ibtikarz.com</a>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Minimalist Form -->
-      <div class="bg-white p-10 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.03)]">
-        <form id="contactForm" onsubmit="event.preventDefault(); submitForm();" class="space-y-8">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <label class="block text-xs font-semibold text-apple-gray uppercase tracking-wider mb-2">Your Name</label>
-              <input type="text" placeholder="John Smith" class="apple-input" required>
+      <!-- Minimalist Form with Validation -->
+      <div class="reveal">
+        <div class="bg-white dark:bg-black p-6 sm:p-8 lg:p-10 rounded-3xl shadow-lg dark:shadow-white/5">
+          <form id="contactForm" class="space-y-6 sm:space-y-8" novalidate>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+              <div>
+                <label for="name"
+                  class="block text-xs font-semibold text-apple-gray dark:text-apple-grayDark uppercase tracking-wider mb-2">Your
+                  Name</label>
+                <input type="text" id="name" name="name" placeholder="John Smith" class="apple-input" required
+                  aria-required="true">
+              </div>
+              <div>
+                <label for="company"
+                  class="block text-xs font-semibold text-apple-gray dark:text-apple-grayDark uppercase tracking-wider mb-2">Company</label>
+                <input type="text" id="company" name="company" placeholder="Acme Corp" class="apple-input">
+              </div>
             </div>
+
             <div>
-              <label class="block text-xs font-semibold text-apple-gray uppercase tracking-wider mb-2">Company</label>
-              <input type="text" placeholder="Acme Corp" class="apple-input">
+              <label for="email"
+                class="block text-xs font-semibold text-apple-gray dark:text-apple-grayDark uppercase tracking-wider mb-2">Email
+                Address</label>
+              <input type="email" id="email" name="email" placeholder="john@company.com" class="apple-input" required
+                aria-required="true">
             </div>
-          </div>
 
-          <div>
-            <label class="block text-xs font-semibold text-apple-gray uppercase tracking-wider mb-2">Email
-              Address</label>
-            <input type="email" placeholder="john@company.com" class="apple-input" required>
-          </div>
+            <div>
+              <label for="message"
+                class="block text-xs font-semibold text-apple-gray dark:text-apple-grayDark uppercase tracking-wider mb-2">Project
+                Details</label>
+              <textarea id="message" name="message" placeholder="Briefly describe what you're building..." rows="4"
+                class="apple-input resize-none" required aria-required="true"></textarea>
+            </div>
 
-          <div>
-            <label class="block text-xs font-semibold text-apple-gray uppercase tracking-wider mb-2">Project
-              Details</label>
-            <textarea placeholder="Briefly describe what you're building..." rows="3" class="apple-input resize-none"
-              required></textarea>
-          </div>
-
-          <button type="submit" id="submitBtn"
-            class="w-full py-4 bg-apple-blue text-white rounded-xl font-semibold hover:bg-apple-blueHover transition-all shadow-md text-lg mt-4 flex justify-center items-center gap-2">
-            <span>Send Enquiry</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-            </svg>
-          </button>
-          <p id="successMsg" class="text-green-600 text-center font-medium hidden mt-4">Message received. We'll be in
-            touch shortly.</p>
-        </form>
+            <button type="submit" id="submitBtn"
+              class="w-full py-3.5 sm:py-4 bg-apple-blue text-white rounded-xl font-semibold hover:bg-apple-blueHover transition-all shadow-md text-base sm:text-lg mt-2 flex justify-center items-center gap-2 focus:ring-2 focus:ring-apple-blue focus:ring-offset-2 dark:focus:ring-offset-black">
+              <span>Send Enquiry</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                aria-hidden="true">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+              </svg>
+            </button>
+            <p id="successMsg" class="text-green-600 dark:text-green-400 text-center font-medium hidden mt-4"
+              role="status" aria-live="polite">✓ Message received. We'll be in touch shortly.</p>
+            <p id="errorMsg" class="text-red-600 dark:text-red-400 text-center font-medium hidden mt-4" role="alert"
+              aria-live="assertive">✗ Something went wrong. Please try again.</p>
+          </form>
+        </div>
       </div>
-
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="bg-white py-8 border-t border-apple-border">
-    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-      <p class="text-sm text-apple-gray font-light">
-        &copy; 2026 IbtikarZ. All rights reserved. Engineered in Pakistan.
+  <footer class="bg-white dark:bg-black py-6 sm:py-8 border-t border-apple-border dark:border-apple-borderDark"
+    role="contentinfo">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p class="text-sm text-apple-gray dark:text-apple-grayDark font-light">
+        &copy; <time datetime="2026">2026</time> IbtikarZ. All rights reserved. Engineered in Pakistan.
       </p>
-      <div class="flex gap-6">
-        <a href="#" class="text-apple-gray hover:text-apple-text transition-colors">
-          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+      <div class="flex gap-4 sm:gap-6">
+        <a href="#"
+          class="text-apple-gray dark:text-apple-grayDark hover:text-apple-text dark:hover:text-white transition-colors p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10"
+          aria-label="LinkedIn">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path
               d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
           </svg>
         </a>
-        <a href="#" class="text-apple-gray hover:text-apple-text transition-colors">
-          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+        <a href="#"
+          class="text-apple-gray dark:text-apple-grayDark hover:text-apple-text dark:hover:text-white transition-colors p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10"
+          aria-label="Twitter">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path
               d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
           </svg>
@@ -596,194 +923,350 @@
 
   <!-- WhatsApp Floating Action Button -->
   <a href="https://wa.me/923247556451" target="_blank" rel="noopener noreferrer"
-    class="fixed bottom-6 right-6 bg-[#25D366] text-white p-[14px] rounded-full shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 z-[100] group flex items-center justify-center overflow-hidden">
-    <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" class="relative z-10">
+    class="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 bg-[#25D366] text-white p-3 sm:p-[14px] rounded-full shadow-lg hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300 z-[100] group flex items-center justify-center overflow-hidden focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#25D366]"
+    aria-label="Chat with us on WhatsApp">
+    <svg viewBox="0 0 24 24" width="24" height="24" sm:w-7 sm:h-7 fill="currentColor" class="relative z-10"
+      aria-hidden="true">
       <path
         d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
     </svg>
     <span
-      class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-500 ease-in-out font-semibold text-sm ml-0 group-hover:ml-3 relative z-10">Chat
+      class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-[100px] transition-all duration-300 ease-in-out font-semibold text-xs sm:text-sm ml-0 group-hover:ml-2 relative z-10">Chat
       with us</span>
-    <!-- Subtle ping animation for attention -->
-    <div class="absolute inset-0 rounded-full bg-[#25D366] opacity-20 animate-ping" style="animation-duration: 3s;">
-    </div>
+    <div class="absolute inset-0 rounded-full bg-[#25D366] opacity-20 animate-ping" style="animation-duration: 3s;"
+      aria-hidden="true"></div>
   </a>
 
-  <!-- Scripts for interaction and 3D -->
+  <!-- Scripts -->
   <script>
-    // Form Submission Simulation
-    function submitForm() {
-      const btn = document.getElementById('submitBtn');
-      const msg = document.getElementById('successMsg');
+    // ========== THEME TOGGLE ==========
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
 
-      btn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-3 text-white" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Sending...';
+    // Check for saved preference or system preference
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-      setTimeout(() => {
-        btn.style.display = 'none';
-        msg.classList.remove('hidden');
-        document.getElementById('contactForm').reset();
-      }, 1500);
+    if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+      html.classList.add('dark');
+      themeToggle?.setAttribute('aria-pressed', 'true');
     }
 
-    // Navbar scroll effect
+    themeToggle?.addEventListener('click', () => {
+      html.classList.toggle('dark');
+      const isDark = html.classList.contains('dark');
+      themeToggle.setAttribute('aria-pressed', isDark);
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    // ========== MOBILE MENU TOGGLE ==========
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    mobileMenuBtn?.addEventListener('click', () => {
+      const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
+      mobileMenuBtn.setAttribute('aria-expanded', !isExpanded);
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Close mobile menu when clicking a link
+    mobileMenu?.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // ========== NAVBAR SCROLL EFFECT ==========
+    let lastScroll = 0;
+    const navbar = document.getElementById('navbar');
+
     window.addEventListener('scroll', () => {
-      const nav = document.getElementById('navbar');
-      if (window.scrollY > 20) {
-        nav.classList.add('shadow-sm');
+      const currentScroll = window.pageYOffset;
+
+      if (currentScroll > 50) {
+        navbar.classList.add('shadow-sm');
       } else {
-        nav.classList.remove('shadow-sm');
+        navbar.classList.remove('shadow-sm');
+      }
+
+      lastScroll = currentScroll;
+    }, { passive: true });
+
+    // ========== SCROLL REVEAL ANIMATIONS ==========
+    document.addEventListener("DOMContentLoaded", () => {
+      const elementsToReveal = document.querySelectorAll('.reveal');
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('active');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        elementsToReveal.forEach(el => observer.observe(el));
+      } else {
+        // Fallback for older browsers
+        elementsToReveal.forEach(el => el.classList.add('active'));
       }
     });
 
-    // --- SCROLL REVEAL ANIMATIONS ---
-    // This makes the page feel premium like Apple.com
-    document.addEventListener("DOMContentLoaded", () => {
-      // Select main containers inside sections to animate
-      const elementsToReveal = document.querySelectorAll('section > div');
-      elementsToReveal.forEach(el => el.classList.add('reveal'));
+    // ========== FORM HANDLING ==========
+    const contactForm = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const successMsg = document.getElementById('successMsg');
+    const errorMsg = document.getElementById('errorMsg');
 
-      const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.15 // Trigger when 15% of the element is visible
-      };
+    contactForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-      const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-            observer.unobserve(entry.target); // Stop observing once revealed
-          }
-        });
-      }, observerOptions);
+      // Basic validation
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
 
-      elementsToReveal.forEach(el => observer.observe(el));
+      if (!name || !email || !message) {
+        errorMsg.classList.remove('hidden');
+        successMsg.classList.add('hidden');
+        return;
+      }
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        errorMsg.textContent = '✗ Please enter a valid email address';
+        errorMsg.classList.remove('hidden');
+        successMsg.classList.add('hidden');
+        return;
+      }
+
+      // UI State: Loading
+      const originalBtnText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Sending...';
+
+      errorMsg.classList.add('hidden');
+      successMsg.classList.add('hidden');
+
+      try {
+        // Simulate API call (replace with actual endpoint)
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        // Success state
+        successMsg.classList.remove('hidden');
+        contactForm.reset();
+      } catch (error) {
+        errorMsg.classList.remove('hidden');
+      } finally {
+        // Reset button
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+
+        // Hide success message after 5 seconds
+        if (successMsg.classList.contains('hidden') === false) {
+          setTimeout(() => successMsg.classList.add('hidden'), 5000);
+        }
+      }
     });
 
-    // --- THREE.JS HERO ANIMATION ---
-    // This instantly shows the client you know 3D web engineering.
-    window.onload = function () {
-      const container = document.getElementById('hero-canvas-container');
-      if (!container) return;
+    // ========== THREE.JS HERO ANIMATION (Enhanced) ==========
+    let heroScene, heroCamera, heroRenderer, heroMesh, heroAnimationId;
+
+    function initHeroCanvas() {
+      const container = document.getElementById('hero-canvas-wrapper');
+      const canvas = document.getElementById('hero-canvas');
+      const loader = document.getElementById('canvas-loader');
+
+      if (!container || !canvas || !window.THREE) {
+        loader?.style.setProperty('display', 'none');
+        return;
+      }
 
       // Scene setup
-      const scene = new THREE.Scene();
-      // Transparent background to blend with CSS
-      scene.background = null;
+      heroScene = new THREE.Scene();
 
       // Camera setup
-      const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-      camera.position.z = 8;
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      heroCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      heroCamera.position.z = 8;
 
       // Renderer setup
-      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-      renderer.setSize(container.clientWidth, container.clientHeight);
-      renderer.setPixelRatio(window.devicePixelRatio);
-      container.appendChild(renderer.domElement);
+      heroRenderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance'
+      });
+      heroRenderer.setSize(width, height);
+      heroRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-      // Create a sleek, modern geometry (Icosahedron looks very tech/enterprise)
+      // Create geometry
       const geometry = new THREE.IcosahedronGeometry(2.5, 1);
 
-      // Material: Clean white with soft blue wireframe/edges
+      // Material with dark mode support
+      const isDark = document.documentElement.classList.contains('dark');
       const material = new THREE.MeshPhysicalMaterial({
-        color: 0xffffff,
+        color: isDark ? 0x1a1a1a : 0xffffff,
         metalness: 0.1,
-        roughness: 0.4,
+        roughness: 0.3,
         transparent: true,
-        opacity: 0.9,
+        opacity: 0.95,
         flatShading: true
       });
 
-      const mesh = new THREE.Mesh(geometry, material);
-      scene.add(mesh);
+      heroMesh = new THREE.Mesh(geometry, material);
+      heroScene.add(heroMesh);
 
-      // Add a wireframe overlay for that "engineering" look
+      // Wireframe overlay
       const wireframeGeometry = new THREE.WireframeGeometry(geometry);
-      const wireframeMaterial = new THREE.LineBasicMaterial({ color: 0x007AFF, transparent: true, opacity: 0.2 });
+      const wireframeMaterial = new THREE.LineBasicMaterial({
+        color: 0x007AFF,
+        transparent: true,
+        opacity: 0.25
+      });
       const wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
-      mesh.add(wireframe);
+      heroMesh.add(wireframe);
 
-      // Lighting setup
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-      scene.add(ambientLight);
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, isDark ? 0.4 : 0.6);
+      heroScene.add(ambientLight);
 
-      const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+      const dirLight = new THREE.DirectionalLight(0xffffff, isDark ? 0.6 : 1);
       dirLight.position.set(5, 5, 5);
-      scene.add(dirLight);
+      heroScene.add(dirLight);
 
-      const blueLight = new THREE.PointLight(0x007AFF, 2, 20);
+      const blueLight = new THREE.PointLight(0x007AFF, isDark ? 1.5 : 2, 20);
       blueLight.position.set(-5, -5, 2);
-      scene.add(blueLight);
+      heroScene.add(blueLight);
 
-      // Interaction Variables
-      let mouseX = 0;
-      let mouseY = 0;
-      let targetX = 0;
-      let targetY = 0;
-      const windowHalfX = container.clientWidth / 2;
-      const windowHalfY = container.clientHeight / 2;
+      // Interaction state
+      let mouseX = 0, mouseY = 0;
       let isDragging = false;
-      let previousMousePosition = { x: 0, y: 0 };
+      let previousMouse = { x: 0, y: 0 };
+      const windowHalfX = width / 2;
+      const windowHalfY = height / 2;
 
-      // Mouse Events
-      container.addEventListener('mousemove', (event) => {
-        const rect = container.getBoundingClientRect();
-        if (isDragging) {
-          const deltaMove = {
-            x: event.clientX - previousMousePosition.x,
-            y: event.clientY - previousMousePosition.y
-          };
-          mesh.rotation.y += deltaMove.x * 0.01;
-          mesh.rotation.x += deltaMove.y * 0.01;
+      // Mouse/Touch handlers
+      const onPointerDown = (e) => {
+        isDragging = true;
+        previousMouse = {
+          x: e.clientX || e.touches?.[0]?.clientX,
+          y: e.clientY || e.touches?.[0]?.clientY
+        };
+        canvas.style.cursor = 'grabbing';
+      };
+
+      const onPointerMove = (e) => {
+        const clientX = e.clientX || e.touches?.[0]?.clientX;
+        const clientY = e.clientY || e.touches?.[0]?.clientY;
+
+        if (isDragging && previousMouse.x && previousMouse.y) {
+          const deltaX = clientX - previousMouse.x;
+          const deltaY = clientY - previousMouse.y;
+
+          heroMesh.rotation.y += deltaX * 0.01;
+          heroMesh.rotation.x += deltaY * 0.01;
         } else {
-          // Parallax effect on hover
-          mouseX = (event.clientX - rect.left) - windowHalfX;
-          mouseY = (event.clientY - rect.top) - windowHalfY;
+          // Parallax effect
+          mouseX = (clientX - container.getBoundingClientRect().left) - windowHalfX;
+          mouseY = (clientY - container.getBoundingClientRect().top) - windowHalfY;
         }
-        previousMousePosition = { x: event.clientX, y: event.clientY };
+
+        previousMouse = { x: clientX, y: clientY };
+      };
+
+      const onPointerUp = () => {
+        isDragging = false;
+        canvas.style.cursor = 'grab';
+      };
+
+      // Event listeners
+      canvas.addEventListener('mousedown', onPointerDown);
+      canvas.addEventListener('mousemove', onPointerMove);
+      window.addEventListener('mouseup', onPointerUp);
+
+      canvas.addEventListener('touchstart', onPointerDown, { passive: true });
+      canvas.addEventListener('touchmove', onPointerMove, { passive: true });
+      window.addEventListener('touchend', onPointerUp);
+
+      // Keyboard accessibility
+      canvas.addEventListener('keydown', (e) => {
+        const speed = 0.05;
+        if (e.key === 'ArrowLeft') heroMesh.rotation.y -= speed;
+        if (e.key === 'ArrowRight') heroMesh.rotation.y += speed;
+        if (e.key === 'ArrowUp') heroMesh.rotation.x -= speed;
+        if (e.key === 'ArrowDown') heroMesh.rotation.x += speed;
       });
 
-      container.addEventListener('mousedown', () => { isDragging = true; });
-      window.addEventListener('mouseup', () => { isDragging = false; });
-
-      // Touch support
-      container.addEventListener('touchmove', (event) => {
-        const rect = container.getBoundingClientRect();
-        if (event.touches.length > 0) {
-          mouseX = (event.touches[0].clientX - rect.left) - windowHalfX;
-          mouseY = (event.touches[0].clientY - rect.top) - windowHalfY;
-        }
-      }, { passive: true });
-
       // Resize handler
-      window.addEventListener('resize', onWindowResize, false);
-      function onWindowResize() {
-        camera.aspect = container.clientWidth / container.clientHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, container.clientHeight);
-      }
+      const onResize = () => {
+        const newWidth = container.clientWidth;
+        const newHeight = container.clientHeight;
 
-      // Animation Loop
+        heroCamera.aspect = newWidth / newHeight;
+        heroCamera.updateProjectionMatrix();
+        heroRenderer.setSize(newWidth, newHeight);
+      };
+
+      window.addEventListener('resize', onResize);
+
+      // Animation loop
       function animate() {
-        requestAnimationFrame(animate);
-
-        targetX = mouseX * 0.001;
-        targetY = mouseY * 0.001;
+        heroAnimationId = requestAnimationFrame(animate);
 
         if (!isDragging) {
-          // Auto rotation + parallax
-          mesh.rotation.y += 0.005;
-          mesh.rotation.x += 0.002;
+          // Auto-rotation
+          heroMesh.rotation.y += 0.003;
+          heroMesh.rotation.x += 0.001;
 
-          mesh.rotation.y += 0.05 * (targetX - mesh.rotation.y);
-          mesh.rotation.x += 0.05 * (targetY - mesh.rotation.x);
+          // Parallax follow
+          heroMesh.rotation.y += 0.02 * (mouseX * 0.001 - heroMesh.rotation.y);
+          heroMesh.rotation.x += 0.02 * (mouseY * 0.001 - heroMesh.rotation.x);
         }
 
-        renderer.render(scene, camera);
+        heroRenderer.render(heroScene, heroCamera);
       }
 
+      // Start animation and hide loader
       animate();
-    };
+      setTimeout(() => {
+        if (loader) {
+          loader.style.opacity = '0';
+          setTimeout(() => loader.style.display = 'none', 300);
+        }
+      }, 800);
+
+      // Store cleanup function
+      canvas._cleanup = () => {
+        cancelAnimationFrame(heroAnimationId);
+        window.removeEventListener('resize', onResize);
+        canvas.removeEventListener('mousedown', onPointerDown);
+        canvas.removeEventListener('mousemove', onPointerMove);
+        window.removeEventListener('mouseup', onPointerUp);
+        canvas.removeEventListener('touchstart', onPointerDown);
+        canvas.removeEventListener('touchmove', onPointerMove);
+        window.removeEventListener('touchend', onPointerUp);
+        heroRenderer?.dispose();
+        heroScene = null;
+      };
+    }
+
+    // Initialize canvas when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initHeroCanvas);
+    } else {
+      initHeroCanvas();
+    }
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      const canvas = document.getElementById('hero-canvas');
+      if (canvas?._cleanup) canvas._cleanup();
+    });
   </script>
 </body>
 
