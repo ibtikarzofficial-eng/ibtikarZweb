@@ -1077,13 +1077,6 @@
       } else { elementsToReveal.forEach(el => el.classList.add('active')); }
     });
 
-    // ========== FAQ TOGGLE ==========
-    function toggleFaq(button) {
-      const content = button.nextElementSibling;
-      const icon = button.querySelector('svg');
-      content.classList.toggle('active');
-      icon.classList.toggle('rotate-180');
-    }
 
     // ========== DYNAMIC YEAR ==========
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -1214,32 +1207,47 @@
     window.addEventListener('beforeunload', () => { const canvas = document.getElementById('hero-canvas'); if (canvas?._cleanup) canvas._cleanup(); });
 
     function inject3DViewer(container, url) {
-      // 1. Remove the play button, image, and overlay
+      // Clear the facade image and button
       container.innerHTML = '';
-
-      // 2. Remove hover and pointer classes so it acts like a normal container now
       container.classList.remove('cursor-pointer', 'group');
 
-      // 3. Inject the iframe dynamically
+      // Inject the 3D WebGL engine
       const iframe = document.createElement('iframe');
       iframe.src = url;
       iframe.style.width = '100%';
       iframe.style.height = '100%';
       iframe.style.border = 'none';
       iframe.allow = 'xr-spatial-tracking; autoplay; fullscreen';
-      iframe.className = 'w-full h-full z-10 animate-fade-in'; // Optional: add tailwind fade-in if you have it
+      iframe.className = 'w-full h-full z-10 transition-opacity duration-500';
 
-      // 4. Append to container
       container.appendChild(iframe);
     }
 
-    // Keep your existing toggleFaq function below
-    function toggleFaq(button) {
-      const content = button.nextElementSibling;
-      const svg = button.querySelector('svg');
-      content.classList.toggle('hidden');
-      svg.classList.toggle('rotate-180');
-    }
+    // 2. Bulletproof FAQ Toggle logic
+    document.addEventListener('DOMContentLoaded', () => {
+      // Grab every FAQ button on the page
+      const faqButtons = document.querySelectorAll('.faq-item button');
+
+      faqButtons.forEach(button => {
+        // Forcefully remove the inline onclick if it's still in the HTML to prevent double-firing
+        button.removeAttribute('onclick');
+
+        // Attach a secure click listener
+        button.addEventListener('click', () => {
+          // Find the content div and the arrow icon inside this specific button
+          const content = button.nextElementSibling;
+          const svg = button.querySelector('svg');
+
+          // Toggle the Tailwind 'hidden' class to show/hide text
+          content.classList.toggle('hidden');
+
+          // Spin the arrow icon so it points up when open
+          if (svg) {
+            svg.classList.toggle('-rotate-180');
+          }
+        });
+      });
+    });
   </script>
 </body>
 
